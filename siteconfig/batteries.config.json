@@ -1,0 +1,401 @@
+{
+  "labels": {
+    "banks": [
+      { "label": "Courant DC", "unit": "A" },
+      { "label": "Tension DC", "unit": "V" },
+      { "label": "Puissance DC", "unit": "kW" },
+      { "label": "SOC", "unit": "%" },
+      { "label": "SOH", "unit": "%" },
+      { "label": "Limit. P Charge", "unit": "kW" },
+      { "label": "Limit. P Décharge", "unit": "kW" },
+      { "label": "Temp. Min", "unit": "°C" },
+      { "label": "Temp. Max", "unit": "°C" }
+    ],
+    "racks": [
+      { "label": "Etat" },
+      { "label": "Courant DC", "unit" : "A" },
+      { "label": "Tension DC", "unit" : "V" },
+      { "label": "SOC", "unit" : "%" },
+      { "label": "SOH", "unit" : "%" },
+      { "label": "Limit. P Charge", "unit" : "kW" },
+      { "label": "Limit. P Décharge", "unit" : "kW" },
+      { "label": "Temp. Min", "unit" : "°C" },
+      { "label": "Temp. Max", "unit" : "°C" }
+    ],
+    "cooling": [
+      { "label": "Label Cooling 1" },
+      { "label": "Label Cooling 2" },
+      { "label": "Label Cooling 3" },
+      { "label": "Label Cooling 4" },
+      { "label": "Label Cooling 5" }
+    ],
+    "fire": [
+      { "label": "Label Fire 1" },
+      { "label": "Label Fire 2" },
+      { "label": "Label Fire 3" },
+      { "label": "Label Fire 4" },
+      { "label": "Label Fire 5" },
+      { "label": "Label Fire 6" },
+      { "label": "Label Fire 7" },
+      { "label": "Label Fire 8" }
+    ]
+  },
+  "clusters": [
+    {
+      "banks": [
+        {
+          "statusVariable": "ETAT_Bk1_Def",
+          "variables": [
+            "ETAT_Bk1_Itot",
+            "Application.IO.ETAT_Bk1_TensTot",
+            "ETAT_Bk1_PInst",
+            "Application.IO.ETAT_Bk1_SOC",
+            "ETAT_Bk1_SOH",
+            "ETAT_Bk1_PuisMaxCh",
+            "ETAT_Bk1_PuisMaxDch",
+            "ETAT_Bk1_TCelMin",
+            "ETAT_Bk1_TCelMax"
+          ],
+          "racks": [
+            {
+              "statusVariable": "ETAT_Str11_Def",
+              "variables": [
+                "ETAT_Str11_ChDch",
+                "ETAT_Str11_Itot",
+                "ETAT_Str11_TensTot",
+                "ETAT_Str11_SOC",
+                "ETAT_Str11_SOH",
+                "ETAT_Str11_PuisMaxCh",
+                "ETAT_Str11_PuisMaxDch",
+                "ETAT_Str11_TCelMin",
+                "ETAT_Str11_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str12_Def",
+              "variables": [
+                "ETAT_Str12_ChDch",
+                "ETAT_Str12_Itot",
+                "ETAT_Str12_TensTot",
+                "ETAT_Str12_SOC",
+                "ETAT_Str12_SOH",
+                "ETAT_Str12_PuisMaxCh",
+                "ETAT_Str12_PuisMaxDch",
+                "ETAT_Str12_TCelMin",
+                "ETAT_Str12_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str13_Def",
+              "variables": [
+                "ETAT_Str13_ChDch",
+                "ETAT_Str13_Itot",
+                "ETAT_Str13_TensTot",
+                "ETAT_Str13_SOC",
+                "ETAT_Str13_SOH",
+                "ETAT_Str13_PuisMaxCh",
+                "ETAT_Str13_PuisMaxDch",
+                "ETAT_Str13_TCelMin",
+                "ETAT_Str13_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str14_Def",
+              "variables": [
+                "ETAT_Str14_ChDch",
+                "ETAT_Str14_Itot",
+                "ETAT_Str14_TensTot",
+                "ETAT_Str14_SOC",
+                "ETAT_Str14_SOH",
+                "ETAT_Str14_PuisMaxCh",
+                "ETAT_Str14_PuisMaxDch",
+                "ETAT_Str14_TCelMin",
+                "ETAT_Str14_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str15_Def",
+              "variables": [
+                "ETAT_Str15_ChDch",
+                "ETAT_Str15_Itot",
+                "ETAT_Str15_TensTot",
+                "ETAT_Str15_SOC",
+                "ETAT_Str15_SOH",
+                "ETAT_Str15_PuisMaxCh",
+                "ETAT_Str15_PuisMaxDch",
+                "ETAT_Str15_TCelMin",
+                "ETAT_Str15_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str16_Def",
+              "variables": [
+                "ETAT_Str16_ChDch",
+                "ETAT_Str16_Itot",
+                "ETAT_Str16_TensTot",
+                "ETAT_Str16_SOC",
+                "ETAT_Str16_SOH",
+                "ETAT_Str16_PuisMaxCh",
+                "ETAT_Str16_PuisMaxDch",
+                "ETAT_Str16_TCelMin",
+                "ETAT_Str16_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str17_Def",
+              "variables": [
+                "ETAT_Str17_ChDch",
+                "ETAT_Str17_Itot",
+                "ETAT_Str17_TensTot",
+                "ETAT_Str17_SOC",
+                "ETAT_Str17_SOH",
+                "ETAT_Str17_PuisMaxCh",
+                "ETAT_Str17_PuisMaxDch",
+                "ETAT_Str17_TCelMin",
+                "ETAT_Str17_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str18_Def",
+              "variables": [
+                "ETAT_Str18_ChDch",
+                "ETAT_Str18_Itot",
+                "ETAT_Str18_TensTot",
+                "ETAT_Str18_SOC",
+                "ETAT_Str18_SOH",
+                "ETAT_Str18_PuisMaxCh",
+                "ETAT_Str18_PuisMaxDch",
+                "ETAT_Str18_TCelMin",
+                "ETAT_Str18_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            }
+          ],
+          "cooling": [
+            "VarCool1",
+            "VarCool2",
+            "VarCool3",
+            "VarCool4",
+            "VarCool5"
+          ],
+          "fire": [
+            "VarFire1",
+            "VarFire2",
+            "VarFire3",
+            "VarFire4",
+            "VarFire5",
+            "VarFire6",
+            "VarFire7",
+            "VarFire8"
+          ]
+        },
+        {
+          "statusVariable": "ETAT_Bk2_Def",
+          "variables": [
+            "ETAT_Bk2_Itot",
+            "Application.IO.ETAT_Bk2_TensTot",
+            "ETAT_Bk2_PInst",
+            "ETAT_Bk2_SOC",
+            "ETAT_Bk2_SOH",
+            "ETAT_Bk2_PuisMaxCh",
+            "ETAT_Bk2_PuisMaxDch",
+            "ETAT_Bk2_TCelMin",
+            "ETAT_Bk2_TCelMax"
+          ],
+          "racks": [
+            {
+              "statusVariable": "ETAT_Str21_Def",
+              "variables": [
+                "ETAT_Str21_ChDch",
+                "ETAT_Str21_Itot",
+                "ETAT_Str21_TensTot",
+                "ETAT_Str21_SOC",
+                "ETAT_Str21_SOH",
+                "ETAT_Str21_PuisMaxCh",
+                "ETAT_Str21_PuisMaxDch",
+                "ETAT_Str21_TCelMin",
+                "ETAT_Str21_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str22_Def",
+              "variables": [
+                "ETAT_Str22_ChDch",
+                "ETAT_Str22_Itot",
+                "ETAT_Str22_TensTot",
+                "ETAT_Str22_SOC",
+                "ETAT_Str22_SOH",
+                "ETAT_Str22_PuisMaxCh",
+                "ETAT_Str22_PuisMaxDch",
+                "ETAT_Str22_TCelMin",
+                "ETAT_Str22_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str23_Def",
+              "variables": [
+                "ETAT_Str23_ChDch",
+                "ETAT_Str23_Itot",
+                "ETAT_Str23_TensTot",
+                "ETAT_Str23_SOC",
+                "ETAT_Str23_SOH",
+                "ETAT_Str23_PuisMaxCh",
+                "ETAT_Str23_PuisMaxDch",
+                "ETAT_Str23_TCelMin",
+                "ETAT_Str23_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str24_Def",
+              "variables": [
+                "ETAT_Str24_ChDch",
+                "ETAT_Str24_Itot",
+                "ETAT_Str24_TensTot",
+                "ETAT_Str24_SOC",
+                "ETAT_Str24_SOH",
+                "ETAT_Str24_PuisMaxCh",
+                "ETAT_Str24_PuisMaxDch",
+                "ETAT_Str24_TCelMin",
+                "ETAT_Str24_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str25_Def",
+              "variables": [
+                "ETAT_Str25_ChDch",
+                "ETAT_Str25_Itot",
+                "ETAT_Str25_TensTot",
+                "ETAT_Str25_SOC",
+                "ETAT_Str25_SOH",
+                "ETAT_Str25_PuisMaxCh",
+                "ETAT_Str25_PuisMaxDch",
+                "ETAT_Str25_TCelMin",
+                "ETAT_Str25_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str26_Def",
+              "variables": [
+                "ETAT_Str26_ChDch",
+                "ETAT_Str26_Itot",
+                "ETAT_Str26_TensTot",
+                "ETAT_Str26_SOC",
+                "ETAT_Str26_SOH",
+                "ETAT_Str26_PuisMaxCh",
+                "ETAT_Str26_PuisMaxDch",
+                "ETAT_Str26_TCelMin",
+                "ETAT_Str26_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str27_Def",
+              "variables": [
+                "ETAT_Str27_ChDch",
+                "ETAT_Str27_Itot",
+                "ETAT_Str27_TensTot",
+                "ETAT_Str27_SOC",
+                "ETAT_Str27_SOH",
+                "ETAT_Str27_PuisMaxCh",
+                "ETAT_Str27_PuisMaxDch",
+                "ETAT_Str27_TCelMin",
+                "ETAT_Str27_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str28_Def",
+              "variables": [
+                "ETAT_Str28_ChDch",
+                "ETAT_Str28_Itot",
+                "ETAT_Str28_TensTot",
+                "ETAT_Str28_SOC",
+                "ETAT_Str28_SOH",
+                "ETAT_Str28_PuisMaxCh",
+                "ETAT_Str28_PuisMaxDch",
+                "ETAT_Str28_TCelMin",
+                "ETAT_Str28_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            },
+            {
+              "statusVariable": "ETAT_Str29_Def",
+              "variables": [
+                "ETAT_Str29_ChDch",
+                "ETAT_Str29_Itot",
+                "ETAT_Str29_TensTot",
+                "ETAT_Str29_SOC",
+                "ETAT_Str29_SOH",
+                "ETAT_Str29_PuisMaxCh",
+                "ETAT_Str29_PuisMaxDch",
+                "ETAT_Str29_TCelMin",
+                "ETAT_Str29_TCelMax"
+              ],
+              "switchVariable": "SWITCH"
+            }
+          ],
+          "cooling": [
+            "VarCool1",
+            "VarCool2",
+            "VarCool3",
+            "VarCool4",
+            "VarCool5"
+          ],
+          "fire": [
+            "VarFire1",
+            "VarFire2",
+            "VarFire3",
+            "VarFire4",
+            "VarFire5",
+            "VarFire6",
+            "VarFire7",
+            "VarFire8"
+          ]
+        }
+      ]
+    }
+  ],
+  "labelledValues": [
+    {
+      "labels": [
+        { "value": "1", "label": "Déconnecté" },
+        { "value": "2", "label": "Vide" },
+        { "value": "3", "label": "En décharge" },
+        { "value": "4", "label": "En charge" },
+        { "value": "5", "label": "Plein" },
+        { "value": "6", "label": "En attente" }
+      ],
+      "variables": [
+        "ETAT_Str11_ChDch",
+        "ETAT_Str12_ChDch",
+        "ETAT_Str13_ChDch",
+        "ETAT_Str14_ChDch",
+        "ETAT_Str15_ChDch",
+        "ETAT_Str16_ChDch",
+        "ETAT_Str17_ChDch",
+        "ETAT_Str18_ChDch",
+        "ETAT_Str21_ChDch",
+        "ETAT_Str22_ChDch",
+        "ETAT_Str23_ChDch",
+        "ETAT_Str24_ChDch",
+        "ETAT_Str25_ChDch",
+        "ETAT_Str26_ChDch",
+        "ETAT_Str27_ChDch",
+        "ETAT_Str28_ChDch",
+        "ETAT_Str29_ChDch"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "curves": [
+    { "label": "SOC", "variable": "PERCENT", "unit": "%" },
+    { "label": "Fréquence", "variable": "APPLICATION.IO.ETAT_Bk1_SOC", "unit": "Hz" },
+    { "label": "Puissance active", "variable": "AAA", "unit": "kW" },
+    { "label": "Puissance réactive", "variable": "BBB", "unit": "kW" },
+    { "label": "Tension", "variable": "ETAT_Bk1_TensTot", "unit": "V" }
+  ],
+  "clustersOverview": {
+    "labels": [
+      { "label": "SOC", "unit": "%" },
+      { "label": "Puissance active", "unit": "kW" },
+      { "label": "Puissance réactive", "unit": "kW" }
+    ],
+    "clusters": [
+      {
+        "name": "Feurs",
+        "variables": [
+          [
+            "ETAT_Bk1_SOC",
+            "ETAT_Bk1_PA",
+            "ETAT_Bk1_PR"
+          ],
+          [
+            "ETAT_Bk1_SOC",
+            "ETAT_Bk1_PA",
+            "ETAT_Bk1_PR"
+          ]
+        ]
+      }
+    ]
+  },
+  "generalOverview": {
+    "lights": [
+      { "label": "Voyant 1", "variable": "Voyant 1" },
+      { "label": "Voyant 2", "variable": "Voyant 2" },
+      { "label": "Voyant 3", "variable": "Voyant 3" },
+      { "label": "Voyant 4", "variable": "Voyant 4" },
+      { "label": "Voyant 5", "variable": "Voyant 5" },
+      { "label": "Voyant 6", "variable": "Voyant 6" },
+      { "label": "Voyant 7", "variable": "Voyant 7" },
+      { "label": "Voyant 8", "variable": "Voyant 8" }
+    ],
+    "values": [
+      { "label": "SOC", "variable": "A", "unit": "%" },
+      { "label": "Fréquence", "variable": "B", "unit": "Hz" },
+      { "label": "Puissance active", "variable": "C", "unit": "kW" },
+      { "label": "Puissance réactive", "variable": "D", "unit": "kW" },
+      { "label": "Tension", "variable": "E", "unit": "V" },
+      { "label": "Puissance bat. dispo", "variable": "F", "unit": "MWh" }
+    ]
+  }
+}

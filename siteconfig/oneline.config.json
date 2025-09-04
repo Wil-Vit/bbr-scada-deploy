@@ -1,0 +1,83 @@
+{
+  "buttons": [
+    {
+      "label": "DEIE",
+      "statusVariable": "STAT_DEIE",
+      "variables": [
+        { "label": "DEIE_AA", "variable": "ETA_AA" },
+        { "label": "DEIE_BB", "variable": "ETA_BB" }
+      ]
+    },
+    {
+      "label": "Aggregateur / SGE",
+      "statusVariable": "STAT_AGG",
+      "variables": [
+        { "label": "AGG_AA", "variable": "ETA_AA" },
+        { "label": "AGG_BB", "variable": "ETA_BB" }
+      ]
+    },
+    {
+      "label": "HVAC",
+      "statusVariable": "STAT_HVAC",
+      "variables": [
+        { "label": "HVAC_AA", "variable": "ETA_AA" },
+        { "label": "HVAC_BB", "variable": "ETA_BB" }
+      ]
+    }
+  ],
+  "elements": [
+    { "id": "0", "type": "start", "label": "Depuis réseau HTA" },
+    {
+      "id": "1",
+      "type": "switch",
+      "stateVariable": "STATE_SW1",
+      "statusVariable": "STAT1",
+      "button": {
+        "label": "Tableau HTA",
+        "statusVariable": "STAT",
+        "variables": [
+          { "label": "AA", "variable": "ETA_AA" },
+          { "label": "BB", "variable": "ETA_BB" }
+        ]
+      },
+      "upstream": {
+        "variables": [{ "label": "Puissance injectée", "variable": "PUIS" }]
+      }
+    },
+    { "id": "2", "type": "transformer", "statusVariable": "STAT2" },
+    {
+      "id": "3",
+      "type": "switch",
+      "stateVariable": "STATE_SW2",
+      "statusVariable": "STAT3",
+      "upstream": {
+        "variables": [{ "label": "Puissance injectée", "variable": "PUIS_2" }]
+      }
+    },
+    { "id": "4", "type": "rectifier", "statusVariable": "STAT4" },
+    { "id": "5", "type": "fuse" },
+    { "id": "6", "type": "end", "label": "Vers batteries 1" },
+    {
+      "id": "7",
+      "type": "switch",
+      "stateVariable": "STATE_SW3",
+      "upstream": {
+        "variables": [{ "label": "Puissance injectée", "variable": "PUIS_3" }]
+      }
+    },
+    { "id": "8", "type": "rectifier" },
+    { "id": "9", "type": "fuse" },
+    { "id": "10", "type": "end", "label": "Vers batteries 2" }
+  ],
+  "layout": [
+    { "id": "0" },
+    { "id": "1" },
+    { "id": "2" },
+    {
+      "and": [
+        [{ "id": "3" }, { "id": "4" }, { "id": "5" }, { "id": "6" }],
+        [{ "id": "7" }, { "id": "8" }, { "id": "9" }, { "id": "10" }]
+      ]
+    }
+  ]
+}

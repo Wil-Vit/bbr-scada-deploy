@@ -1,0 +1,125 @@
+# Configuration for telegraf agent
+[agent]
+  ## Default data collection interval for all inputs
+  interval = "1s"
+  round_interval = true
+
+  metric_batch_size = 10000
+  metric_buffer_limit = 100000
+
+  collection_jitter = "0s"
+  flush_interval = "1s"
+  flush_jitter = "0s"
+  precision = "1s"
+
+  debug = false
+  quiet = true
+
+  # logtarget = "file"
+  # logfile = "C:\Program Files\InfluxData\telegraf\telegraf-1.33.1\logs\telegraf.log"
+  # logfile_rotation_interval = "1d"
+  # logfile_rotation_max_archives = 5
+  
+  omit_hostname = true
+
+[[inputs.opcua]]
+  name = "opcua_1"
+  endpoint = "${OPCUA_ENDPOINT_1}"
+  security_policy = "None"
+  security_mode = "None"
+  auth_method = "Anonymous"
+  tagexclude = ["id"]
+  fieldexclude = ["Quality"]
+
+[[inputs.opcua.group]]
+  name = "opcua_1"
+  namespace = "3"
+  identifier_type = "s"
+  nodes = [
+    {name="ETAT_Bk1_SOC", identifier="Application.IO.ETAT_Bk1_SOC"},
+    {name="ETAT_Bk1_TensTot", identifier="Application.IO.ETAT_Bk1_TensTot"},
+    {name="ETAT_Bk2_TensTot", identifier="Application.IO.ETAT_Bk2_TensTot"},
+    {name="AAA", identifier="AAA"},
+    {name="BBB", identifier="BBB"},
+    {name="CCC", identifier="CCC"},
+    {name="DDD", identifier="DDD"},
+    {name="EEE", identifier="EEE"},
+    {name="PERCENT", identifier="PERCENT"},
+    {name="Application.IO.DEEP", identifier="Application.IO.DEEP"},
+  ]
+
+# [[inputs.opcua]]
+#   name = "opcua_2"
+#   endpoint = "${OPCUA_ENDPOINT_2}"
+#   security_policy = "None"
+#   security_mode = "None"
+#   auth_method = "Anonymous"
+#   tagexclude = ["id"]
+#   fieldexclude = ["Quality"]
+
+# [[inputs.opcua.group]]
+#   name = "opcua_2"
+#   namespace = "3"
+#   identifier_type = "s"
+#   nodes = [
+#     {name="ETAT_Bk1_SOC", identifier="ETAT_Bk1_SOC"},
+#     {name="ETAT_Bk1_TensTot", identifier="ETAT_Bk1_TensTot"},
+#     {name="ETAT_Bk2_TensTot", identifier="ETAT_Bk2_TensTot"},
+#     {name="AAA", identifier="AAA"},
+#     {name="BBB", identifier="BBB"},
+#     {name="CCC", identifier="CCC"},
+#     {name="DDD", identifier="DDD"},
+#     {name="EEE", identifier="EEE"},
+#     {name="PERCENT", identifier="PERCENT"},
+#     {name="Application.IO.DEEP", identifier="Application.IO.DEEP"},
+#   ]
+
+[[inputs.opcua_listener]]
+  name = "opcua_listener_1"
+  endpoint = "${OPCUA_ENDPOINT_1}"
+  connect_fail_behavior = "retry"
+  security_policy = "None"
+  security_mode = "None"
+  auth_method = "Anonymous"
+  tagexclude = ["id"]
+  fieldexclude = ["Quality"]
+
+[[inputs.opcua_listener.group]]
+  name = "opcua_listener_1"
+  namespace = "3"
+  identifier_type = "s"
+  nodes = [
+    { name="ALM_TEST", identifier="ALM_TEST"},
+    { name="ALM2_TEST", identifier="ALM2_TEST"},
+    { name="ALM3_TEST", identifier="ALM3_TEST"},
+    {name="Application.IO.DEEP", identifier="Application.IO.DEEP"},
+  ]
+
+# [[inputs.opcua_listener]]
+#   name = "opcua_listener_2"
+#   endpoint = "${OPCUA_ENDPOINT_2}"
+#   connect_fail_behavior = "retry"
+#   security_policy = "None"
+#   security_mode = "None"
+#   auth_method = "Anonymous"
+#   tagexclude = ["id"]
+#   fieldexclude = ["Quality"]
+
+# [[inputs.opcua_listener.group]]
+#   name = "opcua_listener_2"
+#   namespace = "3"
+#   identifier_type = "s"
+#   nodes = [
+#     { name="ALM_TEST", identifier="ALM_TEST"},
+#     { name="ALM2_TEST", identifier="ALM2_TEST"},
+#     { name="ALM3_TEST", identifier="ALM3_TEST"},
+#     {name="Application.IO.DEEP", identifier="Application.IO.DEEP"},
+#   ]
+
+[[outputs.influxdb]]
+  urls = ["http://influxdb:8086"]
+
+  ## Token for authentication.
+  username = "${INFLUXDB_ADMIN_USER}"
+  password = "${INFLUXDB_ADMIN_PASSWORD}"
+  database = "${INFLUXDB_DATABASE}"

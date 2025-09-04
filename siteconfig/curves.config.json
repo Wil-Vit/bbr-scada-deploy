@@ -1,0 +1,46 @@
+[
+  {
+    "server": 1,
+    "folder": "Application.IO.",
+    "curves": [
+      { "label": "DEEP", "variable": "DEEP" },
+      { "label": "SOC B1", "variable": "ETAT_Bk1_SOC", "unit": "%" },
+      { "label": "Tension B1", "variable": "ETAT_Bk1_TensTot", "unit": "V" },
+      { "label": "Tension B2", "variable": "ETAT_Bk2_TensTot", "unit": "V" }
+    ]
+  },
+  {
+    "server": 1,
+    "curves": [
+      { "label": "AAA", "variable": "AAA", "unit": "kW" },
+      { "label": "BBB", "variable": "BBB", "unit": "kW" },
+      { "label": "CCC", "variable": "CCC", "unit": "kW" },
+      { "label": "DDD", "variable": "DDD", "unit": "kW" },
+      { "label": "EEE", "variable": "EEE", "unit": "kW" },
+      { "label": "1", "variable": "1", "unit": "kW" },
+      { "label": "2", "variable": "2", "unit": "kW" },
+      { "label": "3", "variable": "3", "unit": "kW" },
+      { "label": "4", "variable": "4", "unit": "kW" },
+      { "label": "5", "variable": "5", "unit": "kW" },
+      { "label": "6", "variable": "6", "unit": "kW" },
+      { "label": "7", "variable": "7", "unit": "kW" },
+      { "label": "8", "variable": "8", "unit": "kW" },
+      { "label": "9", "variable": "9", "unit": "kW" },
+      { "label": "10", "variable": "10", "unit": "kW" },
+      { "label": "11", "variable": "11", "unit": "kW" },
+      { "label": "12", "variable": "12", "unit": "kW" },
+      { "label": "13", "variable": "13", "unit": "kW" },
+      { "label": "14", "variable": "14", "unit": "kW" },
+      { "label": "15", "variable": "15", "unit": "kW" },
+      { "label": "16", "variable": "16", "unit": "kW" },
+      { "label": "17", "variable": "17", "unit": "kW" },
+      { "label": "18", "variable": "18", "unit": "kW" },
+      { "label": "19", "variable": "19", "unit": "kW" },
+      { "label": "20", "variable": "20", "unit": "kW" },
+      { "label": "21", "variable": "21", "unit": "kW" },
+      { "label": "22", "variable": "22", "unit": "kW" },
+      { "label": "23", "variable": "23", "unit": "kW" },
+      { "label": "24", "variable": "24", "unit": "kW" }
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "namespace": "3",
+    "alarms_1": ["ALM_TEST"],
+    "alarms_2": ["ALM2_TEST"],
+    "faults": ["ALM3_TEST"]
+  },
+  {
+    "namespace": "3",
+    "folder": "Application.IO.",
+    "alarms_1": ["DEEP"]
+  }
+]
