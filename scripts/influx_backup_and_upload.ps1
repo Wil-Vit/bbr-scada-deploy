@@ -1,4 +1,6 @@
 #!/snap/bin/pwsh
+# Script to backup InfluxDB data from Docker container and upload to SharePoint
+
 $now = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 $containerId = docker ps | Select-String -Pattern "influxdb" | ForEach-Object { $_.ToString().Substring(0,12) }
 
