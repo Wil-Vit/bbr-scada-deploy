@@ -53,6 +53,7 @@ services:
     environment:
       - NODE_ENV=production
       - FRONT_URL=${FRONT_URL}
+      - HYPERVISOR_URL=${HYPERVISOR_URL}
       - OPCUA_ENDPOINT_1=${OPCUA_ENDPOINT_1}
       - OPCUA_SCADA_USER=${OPCUA_SCADA_USER}
       - OPCUA_SCADA_PASSWORD=${OPCUA_SCADA_PASSWORD}
