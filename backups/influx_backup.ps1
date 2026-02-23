@@ -17,14 +17,20 @@ $SmtpPort     = 2525
 $SmtpFrom     = "backup@bbr-energie.fr"
 $SmtpTo       = "informatique@bbr-energie.fr"
 $SmtpUser     = "backup@bbr-energie.fr"
-$SmtpPassword = "changeme"
+$SmtpPassword = "changeMe"
 
 
-# --- Configuration logs -------------------------------------
+# --- Dossier de travail temporaire (hors C:\Backups) --------
 
-$LogDir  = Join-Path $BackupRootDir "logs"
+$dateSuffix = Get-Date -Format "yyyy_MM_dd-HH-mm-ss"
+$WorkTmpDir = Join-Path $env:TEMP "influx_backup_$dateSuffix"
+New-Item -ItemType Directory -Path $WorkTmpDir -Force | Out-Null
+
+# --- Configuration logs (dans le dossier temporaire) --------
+
+$LogDir  = Join-Path $WorkTmpDir "logs"
 New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
-$LogFile = Join-Path $LogDir ("influx_backup_" + (Get-Date -Format "yyyy_MM_dd-HH-mm-ss") + ".log")
+$LogFile = Join-Path $LogDir "influx_backup_$dateSuffix.log"
 
 # --- Fonctions utilitaires ----------------------------------
 
@@ -129,9 +135,9 @@ Write-Log "Conteneur '$ContainerName' détecté et actif." "OK"
 
 # --- Préparation des dossiers -------------------------------
 
-$tempDir = Join-Path $BackupRootDir "_tmp_influx"
+$tempDir = Join-Path $WorkTmpDir "_influx_data"
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-Write-Log "Dossier temporaire local : $tempDir" "OK"
+Write-Log "Dossier de travail temporaire : $tempDir" "OK"
 
 Invoke-DockerCommand "Nettoyage /tmp" @("exec", $ContainerName, "rm", "-rf", $TmpInsideContainer)
 
@@ -161,8 +167,7 @@ Write-Log "Nettoyage du dossier temporaire dans le conteneur effectué." "OK"
 
 # --- Compression en ZIP -------------------------------------
 
-$dateSuffix = Get-Date -Format "yyyy_MM_dd-HH-mm-ss"
-$zipPath    = Join-Path $BackupRootDir "influxdb_backup_$dateSuffix.zip"
+$zipPath = Join-Path $WorkTmpDir "influxdb_backup_$dateSuffix.zip"
 
 Write-Log "Compression des fichiers vers $zipPath..."
 Compress-Archive -Path "$tempDir\*" -DestinationPath $zipPath -Force
@@ -171,13 +176,43 @@ Write-Log "Archive créée : $zipPath" "OK"
 Remove-Item -Recurse -Force $tempDir
 Write-Log "Dossier temporaire local supprimé." "OK"
 
-# --- Résumé + Mail succès -----------------------------------
+# --- Déplacement final vers C:\Backups et C:\Backups-Bess --
 
-$sizeMo = [math]::Round((Get-Item $zipPath).Length / 1MB, 2)
-Write-Log "=== Sauvegarde terminée avec succès ===" "OK"
-Write-Log "Archive : $zipPath" "OK"
+$zipName = "influxdb_backup_$dateSuffix.zip"
+
+# Destination principale
+New-Item -ItemType Directory -Path $BackupRootDir -Force | Out-Null
+$finalZipPath = Join-Path $BackupRootDir $zipName
+Copy-Item -Path $zipPath -Destination $finalZipPath -Force
+Write-Log "Archive copiée vers : $finalZipPath" "OK"
+
+# Destination secondaire
+$BackupBessDir = "C:\Backups-Bess"
+New-Item -ItemType Directory -Path $BackupBessDir -Force | Out-Null
+$finalZipBessPath = Join-Path $BackupBessDir $zipName
+Move-Item -Path $zipPath -Destination $finalZipBessPath -Force
+Write-Log "Archive copiée vers : $finalZipBessPath" "OK"
+
+$sizeMo = [math]::Round((Get-Item $finalZipPath).Length / 1MB, 2)
 Write-Log "Taille  : $sizeMo Mo" "OK"
-Write-Log "Log     : $LogFile" "OK"
+
+# Déplacer le log vers C:\Backups\logs
+$finalLogDir  = Join-Path $BackupRootDir "logs"
+New-Item -ItemType Directory -Path $finalLogDir -Force | Out-Null
+$finalLogPath = Join-Path $finalLogDir (Split-Path $LogFile -Leaf)
+
+Write-Log "=== Sauvegarde terminée avec succès ===" "OK"
+Write-Log "Log déplacé vers : $finalLogPath" "OK"
+
+# Mettre à jour $LogFile avant de copier pour que Send-Mail référence le bon chemin
+$tmpLogFile = $LogFile
+$LogFile    = $finalLogPath
+Copy-Item -Path $tmpLogFile -Destination $finalLogPath -Force
+
+# Nettoyer le dossier de travail temporaire
+Remove-Item -Recurse -Force $WorkTmpDir -ErrorAction SilentlyContinue
+
+# --- Résumé + Mail succès -----------------------------------
 
 Send-Mail `
     -Subject   "Backup InfluxDB reussi - $env:COMPUTERNAME" `
