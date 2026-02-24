@@ -12,23 +12,13 @@ param(
 
 # --- Configuration SMTP -------------------------------------
 
-$SmtpServer     = "mail.smtp2go.com"
-$SmtpPort       = 2525
-$SmtpFrom       = "backup@bbr-energie.fr"
-$SmtpTo         = "informatique@bbr-energie.fr"
-$SmtpUser       = "backup@bbr-energie.fr"
-$SmtpCredTarget = "SMTP_BBR"   # Nom de l'entrée dans Windows Credential Manager
-$SiteName       = "4062 - Feurs"
-
-
-# --- Configuration NAS (SSH/SCP) ----------------------------
-
-$NasHost      = "82.96.158.188"
-$NasPort      = 64891
-$NasUser      = "ssh.bbr"
-$NasBackupDir = "~/Backup"
-$NasCredTarget = "NAS_BBR"   # Nom de l'entrée dans Windows Credential Manager
-$NasHostKey   = "ssh-ed25519 255 SHA256:FUEtY+2JOx05/zB5ta3ck0Lq6iUZOMOTy0QU3HYMIBI"
+$SmtpServer   = "mail.smtp2go.com"
+$SmtpPort     = 2525
+$SmtpFrom     = "backup@bbr-energie.fr"
+$SmtpTo       = "informatique@bbr-energie.fr"
+$SmtpUser     = "backup@bbr-energie.fr"
+$SmtpPassword = "changeMe"
+$SiteName = "5013 - Ondes"
 
 
 # --- Dossier de travail temporaire (hors C:\Backups) --------
@@ -144,33 +134,6 @@ if ($LASTEXITCODE -ne 0 -or $running -ne "true") {
 
 Write-Log "Conteneur '$ContainerName' détecté et actif." "OK"
 
-# --- Lecture des mots de passe depuis Windows Credential Manager ------------
-
-if (-not (Get-Module -ListAvailable -Name CredentialManager)) {
-    Write-Log "Module 'CredentialManager' introuvable. Installez-le : Install-Module CredentialManager" "ERROR"
-    exit 1
-}
-Import-Module CredentialManager -ErrorAction Stop
-
-$smtpCred = Get-StoredCredential -Target $SmtpCredTarget
-if (-not $smtpCred) {
-    Write-Log "Identifiants SMTP introuvables dans le Credential Manager (cible : '$SmtpCredTarget')." "ERROR"
-    Write-Log "Exécutez : New-StoredCredential -Target '$SmtpCredTarget' -UserName '$SmtpUser' -Password 'motdepasse' -Type Generic -Persist LocalMachine" "ERROR"
-    exit 1
-}
-$SmtpPassword = $smtpCred.GetNetworkCredential().Password
-Write-Log "Identifiants SMTP récupérés depuis le Credential Manager (cible : '$SmtpCredTarget')." "OK"
-
-$nasCred = Get-StoredCredential -Target $NasCredTarget
-if (-not $nasCred) {
-    Write-Log "Identifiants NAS introuvables dans le Credential Manager (cible : '$NasCredTarget')." "ERROR"
-    Write-Log "Exécutez : New-StoredCredential -Target '$NasCredTarget' -UserName '$NasUser' -Password 'motdepasse' -Type Generic -Persist LocalMachine" "ERROR"
-    Send-Mail -Subject "[$SiteName] Backup InfluxDB ECHOUE - $env:COMPUTERNAME" -Body $script:MailLog -BodyColor "red"
-    exit 1
-}
-$NasPassword = $nasCred.GetNetworkCredential().Password
-Write-Log "Identifiants NAS récupérés depuis le Credential Manager (cible : '$NasCredTarget')." "OK"
-
 # --- Préparation des dossiers -------------------------------
 
 $tempDir = Join-Path $WorkTmpDir "_influx_data"
@@ -249,53 +212,6 @@ Copy-Item -Path $tmpLogFile -Destination $finalLogPath -Force
 
 # Nettoyer le dossier de travail temporaire
 Remove-Item -Recurse -Force $WorkTmpDir -ErrorAction SilentlyContinue
-
-# --- Envoi vers le NAS (SSH/SCP) ----------------------------
-
-Write-Log "Envoi du ZIP vers le NAS ($NasUser@${NasHost}:$NasPort)..."
-try {
-    $nasRemoteDir  = "$NasBackupDir/$SiteName"
-    $nasRemotePath = "$nasRemoteDir/$zipName"
-
-    $hasPlink = [bool](Get-Command plink -ErrorAction SilentlyContinue)
-    $hasPscp  = [bool](Get-Command pscp  -ErrorAction SilentlyContinue)
-
-    if ($hasPlink -and $hasPscp) {
-        # --- Authentification par mot de passe via PuTTY (plink/pscp) -------
-        # -batch : désactive les prompts interactifs (host-key, etc.)
-        # -pw    : mot de passe SSH en clair (stockez-le dans un secret vault en prod)
-
-        $mkdirOutput = plink -P $NasPort -pw $NasPassword -batch -hostkey $NasHostKey "${NasUser}@${NasHost}" "mkdir -p `"$nasRemoteDir`"" 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            Write-Log "Impossible de créer le dossier NAS '$nasRemoteDir' : $mkdirOutput" "WARN"
-        } else {
-            $nasRemotePathEscaped = $nasRemotePath -replace ' ', '\ '
-            $scpOutput = pscp -P $NasPort -pw $NasPassword -batch -hostkey $NasHostKey "$finalZipPath" "${NasUser}@${NasHost}:$nasRemotePathEscaped" 2>&1
-            if ($LASTEXITCODE -eq 0) {
-                Write-Log "ZIP envoyé vers le NAS : $nasRemotePath" "OK"
-            } else {
-                Write-Log "Échec envoi NAS (code $LASTEXITCODE) : $scpOutput" "WARN"
-            }
-        }
-    } else {
-        # --- Fallback : authentification par clé SSH (ssh/scp natif) ---------
-        Write-Log "plink/pscp introuvables — utilisation de ssh/scp (clé SSH requise). Installez PuTTY pour gérer le mot de passe." "WARN"
-
-        $mkdirOutput = ssh -p $NasPort "${NasUser}@${NasHost}" "mkdir -p `"$nasRemoteDir`"" 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            Write-Log "Impossible de créer le dossier NAS '$nasRemoteDir' : $mkdirOutput" "WARN"
-        } else {
-            $scpOutput = scp -P $NasPort "$finalZipPath" "${NasUser}@${NasHost}:`"$nasRemotePath`"" 2>&1
-            if ($LASTEXITCODE -eq 0) {
-                Write-Log "ZIP envoyé vers le NAS : $nasRemotePath" "OK"
-            } else {
-                Write-Log "Échec envoi NAS (code $LASTEXITCODE) : $scpOutput" "WARN"
-            }
-        }
-    }
-} catch {
-    Write-Log "Erreur lors de l'envoi vers le NAS : $($_.Exception.Message)" "WARN"
-}
 
 # --- Résumé + Mail succès -----------------------------------
 
