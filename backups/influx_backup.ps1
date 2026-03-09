@@ -7,9 +7,9 @@ param(
     [string]$ContainerName      = "scada-influxdb-1",
     [string]$BackupRootDir      = "C:\Backups",
     [string]$TmpInsideContainer = "/tmp/influx_backup",
-    [int]$BankCount             = 4,
+    [int]$BankCount             = 2,
     [string]$EveBaseDir         = "C:\Users\BBR\Documents\EVE\HMI data",
-    [int]$NumberAutomate        = 2,
+    [int]$NumberAutomate        = 1,
     [string]$ModbusLogDir       = "C:\Users\BBR\Documents\modbus_log\txt"
 )
 
@@ -22,7 +22,7 @@ $SmtpFrom       = "backup@bbr-energie.fr"
 $SmtpTo         = "informatique@bbr-energie.fr"
 $SmtpUser       = "backup@bbr-energie.fr"
 $SmtpCredTarget = "SMTP_BBR"   # Nom de l'entrée dans Windows Credential Manager
-$SiteName       = "5013 - Ondes"
+$SiteName       = "4062 - Feurs"
 
 
 # --- Configuration NAS (SSH/SCP) ----------------------------
