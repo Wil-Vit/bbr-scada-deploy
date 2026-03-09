@@ -4,9 +4,13 @@
 # ============================================================
 
 param(
-    [string]$ContainerName  = "scada-influxdb-1",
-    [string]$BackupRootDir  = "C:\Backups",
-    [string]$TmpInsideContainer = "/tmp/influx_backup"
+    [string]$ContainerName      = "scada-influxdb-1",
+    [string]$BackupRootDir      = "C:\Backups",
+    [string]$TmpInsideContainer = "/tmp/influx_backup",
+    [int]$BankCount             = 4,
+    [string]$EveBaseDir         = "C:\Users\BBR\Documents\EVE\HMI data",
+    [int]$NumberAutomate        = 2,
+    [string]$ModbusLogDir       = "C:\Users\BBR\Documents\modbus_log\txt"
 )
 
 
@@ -18,12 +22,12 @@ $SmtpFrom       = "backup@bbr-energie.fr"
 $SmtpTo         = "informatique@bbr-energie.fr"
 $SmtpUser       = "backup@bbr-energie.fr"
 $SmtpCredTarget = "SMTP_BBR"   # Nom de l'entrée dans Windows Credential Manager
-$SiteName       = "4062 - Feurs"
+$SiteName       = "5013 - Ondes"
 
 
 # --- Configuration NAS (SSH/SCP) ----------------------------
 
-$NasHost      = "82.96.158.188"
+$NasHost      = "10.8.0.7"
 $NasPort      = 64891
 $NasUser      = "ssh.bbr"
 $NasBackupDir = "~/Backup"
@@ -34,6 +38,7 @@ $NasHostKey   = "ssh-ed25519 255 SHA256:FUEtY+2JOx05/zB5ta3ck0Lq6iUZOMOTy0QU3HYM
 # --- Dossier de travail temporaire (hors C:\Backups) --------
 
 $dateSuffix = Get-Date -Format "yyyy_MM_dd-HH-mm-ss"
+$dateEve    = Get-Date -Format "yyyy-MM-dd"
 $WorkTmpDir = Join-Path $env:TEMP "influx_backup_$dateSuffix"
 New-Item -ItemType Directory -Path $WorkTmpDir -Force | Out-Null
 
@@ -202,6 +207,63 @@ Write-Log "Fichiers copiés avec succès." "OK"
 
 Invoke-DockerCommand "Nettoyage post-backup" @("exec", $ContainerName, "rm", "-rf", $TmpInsideContainer)
 Write-Log "Nettoyage du dossier temporaire dans le conteneur effectué." "OK"
+
+# --- Collecte des fichiers EVE HMI (AlarmLog + DataLog) ----
+
+Write-Log "Collecte des fichiers EVE HMI (Banks 1 à $BankCount)..."
+$eveDataDir = Join-Path $tempDir "eve_data"
+New-Item -ItemType Directory -Path $eveDataDir -Force | Out-Null
+
+for ($bank = 1; $bank -le $BankCount; $bank++) {
+    $bankName    = "Bank $bank"
+    $bankDestDir = Join-Path $eveDataDir $bankName
+    New-Item -ItemType Directory -Path $bankDestDir -Force | Out-Null
+
+    # AlarmLog du jour
+    $alarmSrc = Join-Path $EveBaseDir "$bankName\AlarmLog\Alarm_$dateEve.csv"
+    if (Test-Path $alarmSrc) {
+        Copy-Item -Path $alarmSrc -Destination $bankDestDir -Force
+        Write-Log "[$bankName] AlarmLog copié : $alarmSrc" "OK"
+    } else {
+        Write-Log "[$bankName] AlarmLog introuvable : $alarmSrc" "WARN"
+    }
+
+    # DataLog du jour (tous les fichiers correspondant au pattern)
+    $dataLogDir = Join-Path $EveBaseDir "$bankName\DataLog"
+    $dataFiles  = Get-ChildItem -Path $dataLogDir -Filter "$dateEve*.csv.gz" -ErrorAction SilentlyContinue
+    if ($dataFiles -and $dataFiles.Count -gt 0) {
+        foreach ($f in $dataFiles) {
+            Copy-Item -Path $f.FullName -Destination $bankDestDir -Force
+        }
+        Write-Log "[$bankName] DataLog : $($dataFiles.Count) fichier(s) copié(s)" "OK"
+    } else {
+        Write-Log "[$bankName] DataLog introuvable : $dataLogDir\$dateEve*.csv.gz" "WARN"
+    }
+}
+
+Write-Log "Collecte EVE terminée." "OK"
+
+# --- Collecte des logs Modbus (AUT1..AUTn) ------------------
+
+Write-Log "Collecte des logs Modbus (AUT1 à AUT$NumberAutomate)..."
+$modbusDataDir = Join-Path $tempDir "modbus_log"
+New-Item -ItemType Directory -Path $modbusDataDir -Force | Out-Null
+
+for ($aut = 1; $aut -le $NumberAutomate; $aut++) {
+    $autName    = "AUT$aut"
+    $autSrc     = Join-Path $ModbusLogDir "$autName\$dateEve.txt"
+    $autDestDir = Join-Path $modbusDataDir $autName
+    New-Item -ItemType Directory -Path $autDestDir -Force | Out-Null
+
+    if (Test-Path $autSrc) {
+        Copy-Item -Path $autSrc -Destination $autDestDir -Force
+        Write-Log "[$autName] Log Modbus copié : $autSrc" "OK"
+    } else {
+        Write-Log "[$autName] Log Modbus introuvable : $autSrc" "WARN"
+    }
+}
+
+Write-Log "Collecte Modbus terminée." "OK"
 
 # --- Compression en ZIP -------------------------------------
 

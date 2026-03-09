@@ -1,0 +1,4 @@
+open sftp://root:changeme@10.10.20.50
+synchronize local "C:\Users\BBR\Documents\EVE\HMI data\Bank 1\DataLog" "/media/mmcblk0p1/DataLog"
+synchronize local "C:\Users\BBR\Documents\EVE\HMI data\Bank 1\AlarmLog" "/media/mmcblk0p1/AlarmLog"
+exit
